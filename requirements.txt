@@ -1,0 +1,9 @@
+feedparser==6.0.11
+googlenewsdecoder
+selectolax<1.0
+trafilatura
+lxml_html_clean
+groq
+pydantic>=2
+python-dotenv
+pillow
