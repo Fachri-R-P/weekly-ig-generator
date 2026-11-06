@@ -1,13 +1,13 @@
 # Weekly IG Generator
 
-Program Python yang mengubah berita properti Indonesia menjadi **carousel Instagram 6 slide** secara otomatis: dari mencari berita, merangkumnya dengan AI, sampai menghasilkan gambar PNG siap unggah, lengkap dengan caption, hashtag, dan referensi sumber berita.
+Program Python yang mengubah berita properti Indonesia menjadi **carousel Instagram (6 slide isi + 1 slide kuis polling)** secara otomatis: dari mencari berita, merangkumnya dengan AI, sampai menghasilkan gambar PNG siap unggah, lengkap dengan caption, hashtag, dan referensi sumber berita.
 
 ## Cara kerja
 
 ```
 ambil_berita.py → isi_artikel.py → generator.py → render.py
  cari berita       ambil isi         buat konten     buat gambar
- (Google News)     artikel           dengan AI       slide_1..6.png
+ (Google News)     artikel           dengan AI       slide_1..7.png
                                      + validasi
                         ▲
         api.py (FastAPI) membungkus seluruh alur → dipanggil n8n tiap minggu
@@ -16,8 +16,8 @@ ambil_berita.py → isi_artikel.py → generator.py → render.py
 1. **`src/ambil_berita.py`**: mengambil berita 7 hari terakhir dari Google News RSS, menyaring yang relevan dengan properti Indonesia (kata kunci properti, membuang berita luar negeri dan topik kriminal), dan membuang judul ganda.
 2. **`src/isi_artikel.py`**: membuka link asli artikel dan mengekstrak teksnya (dengan `trafilatura`). Artikel yang gagal diambil atau terlalu pendek dilewati.
 3. **`src/generator.py`**: mengirim teks artikel ke model AI di Groq dengan instruksi dari `prompts/carousel_prompt.md`, lalu memvalidasi jawabannya. Jika tidak valid, AI diminta memperbaiki sekali. Artikel yang sudah dipakai dicatat di `output/terpakai.json` supaya tidak diulang di minggu berikutnya. Hasil disimpan ke `output/hasil.json`.
-4. **`src/schemas.py`**: aturan validasi (Pydantic): tepat 6 slide, batas panjang teks, 5-15 hashtag yang dirapikan otomatis.
-5. **`src/render.py`**: membaca `hasil.json` dan menggambar tiap slide menjadi PNG 1080x1350 (rasio 4:5) dengan Pillow.
+4. **`src/schemas.py`**: aturan validasi (Pydantic): tepat 6 slide, satu kuis polling (pertanyaan + 2-3 pilihan), batas panjang teks, 5-15 hashtag yang dirapikan otomatis.
+5. **`src/render.py`**: membaca `hasil.json` dan menggambar tiap slide menjadi PNG 1080x1350 (rasio 4:5) dengan Pillow: 6 slide isi dengan latar gradasi biru, ditambah slide ke-7 berisi kuis ("Menurutmu?") dengan pilihan A/B/C.
 6. **`src/api.py`**: FastAPI yang menjalankan seluruh alur lewat satu endpoint, agar bisa dipicu otomatis.
 7. **`n8n/weekly-ig-workflow.json`**: workflow n8n yang memanggil API setiap Senin 08:00.
 
@@ -33,7 +33,8 @@ Prompt lengkap ada di [`prompts/carousel_prompt.md`](prompts/carousel_prompt.md)
 - **Aturan akurasi:** hanya memakai fakta dari teks artikel; dilarang menambah angka, nama, tanggal, atau klaim; angka dan nama dipertahankan persis.
 - **Struktur 6 slide:** (1) hook, (2-5) satu poin utama per slide, (6) kesimpulan.
 - **Gaya:** santai tapi profesional, judul slide maks. 70 karakter, isi maks. 260 karakter.
-- **Format output:** JSON dengan `ringkasan`, `slides` (6 item), `caption`, dan `hashtags` (8-12).
+- **Kuis:** satu polling opini (bukan pertanyaan fakta) dengan 2-3 pilihan; pertanyaan maks. 120 karakter, tiap pilihan maks. 45 karakter. Caption diakhiri pertanyaan polling dan ajakan menjawab di komentar.
+- **Format output:** JSON dengan `ringkasan`, `slides` (6 item), `kuis`, `caption`, dan `hashtags` (8-12).
 
 Pesan *user* berisi `JUDUL` dan `TEKS ARTIKEL` hasil ekstraksi. Model dipanggil dengan `temperature=0.3` dan `response_format=json_object` agar keluaran stabil. Jawaban divalidasi Pydantic; bila gagal, pesan error dikirim kembali ke AI untuk diperbaiki satu kali.
 
@@ -62,7 +63,7 @@ Jalankan dari folder utama proyek:
 
 ```bash
 python src/generator.py    # cari berita, buat konten, simpan output/hasil.json
-python src/render.py       # buat output/slide_1.png ... slide_6.png
+python src/render.py       # buat output/slide_1.png ... slide_7.png (slide 7 = kuis)
 ```
 
 Untuk mencoba bagian pengambil berita saja:
@@ -82,9 +83,9 @@ python -m uvicorn api:app --app-dir src --port 8000
 | Endpoint | Fungsi |
 |---|---|
 | `GET /health` | Cek server hidup |
-| `POST /generate` | Jalankan alur lengkap (berita → AI → 6 PNG), kembalikan JSON hasil |
+| `POST /generate` | Jalankan alur lengkap (berita → AI → 7 PNG), kembalikan JSON hasil beserta `slides_url` |
 | `GET /result` | Hasil generate terakhir |
-| `GET /slides/{1-6}` | Unduh gambar slide |
+| `GET /slides/{1-7}` | Unduh gambar slide (7 = kuis) |
 
 Dokumentasi interaktif tersedia di http://127.0.0.1:8000/docs.
 
@@ -121,7 +122,6 @@ weekly-ig-generator/
 │   └── carousel_prompt.md
 ├── n8n/
 │   └── weekly-ig-workflow.json
-├── assets/                # logo
 ├── examples/              # contoh hasil
 ├── output/                # hasil run (tidak masuk git)
 ├── requirements.txt
@@ -136,6 +136,7 @@ weekly-ig-generator/
 - Percobaan ulang ke AI hanya sekali; kegagalan jaringan atau batas API belum ditangani khusus.
 - Beberapa situs memblokir pengambilan isi artikel; artikel tersebut dilewati.
 - Font diambil dari folder font sistem (Windows/Linux), tampilan bisa sedikit berbeda antar komputer.
+- Carousel Instagram tidak mendukung polling bawaan (hanya Story), jadi kuis dijawab lewat kolom komentar.
 - Belum ada publikasi otomatis ke Instagram.
 
 ## Rencana pengembangan

@@ -1,51 +1,58 @@
 {
   "sumber_artikel": {
-    "judul": "BP Tapera Salurkan 200.698 Rumah Subsidi hingga November 2026 - Demokratis.co.id",
-    "media": "Demokratis.co.id",
-    "tanggal": "2026-11-05T20:51:18+00:00",
-    "url": "https://demokratis.co.id/bp-tapera-penyaluran-rumah-subsidi"
+    "judul": "Penjualan Rumah Primer Merosot Saat Harga Properti Naik - Lensa Hukum",
+    "media": "Lensa Hukum",
+    "tanggal": "2026-11-05T23:52:04+00:00",
+    "url": "https://lensahukum.co.id/penjualan-rumah-primer-merosot"
   },
   "konten": {
-    "ringkasan": "BP Tapera telah menyalurkan pembiayaan untuk 200.698 rumah subsidi senilai Rp 25 triliun hingga 5 November 2026, mencapai 57,34 % dari target 350.000 unit. Untuk menutup sisa 149.000 rumah, lembaga ini mempercepat penyaluran lewat pemetaan, dialog, sosialisasi, dan rencana akad massal di Jawa Timur.",
+    "ringkasan": "Penjualan rumah primer di Indonesia turun 8,43 % YoY pada kuartal III 2026 meski indeks harga properti masih naik 0,58 %. Kendala utama meliputi biaya material, perizinan, dan suku bunga KPR, sementara KPR tetap menjadi metode pembayaran utama.",
     "slides": [
       {
-        "judul": "BP Tapera: 200.698 Rumah Subsidi Sudah Disalurkan!",
-        "isi": "Hingga 5 November 2026, BP Tapera menyalurkan pembiayaan untuk 200.698 unit rumah subsidi senilai Rp 25 triliun."
+        "judul": "Penjualan Rumah Primer Turun, Harga Tetap Naik!",
+        "isi": "Data Q3 2026 menunjukkan penjualan rumah primer turun 8,43 % YoY, sementara indeks harga properti (IHPR) masih naik 0,58 %."
       },
       {
-        "judul": "Target 2026: 350.000 unit, realisasi 57,34%",
-        "isi": "Realisasi 200.698 unit mencakup 57,34 % dari target 350.000 unit rumah subsidi yang ditetapkan untuk tahun 2026."
+        "judul": "Semua Segmen Rumah Alami Kontraksi",
+        "isi": "Segmen kecil, menengah, dan besar semuanya mencatat penurunan penjualan. Tipe menengah paling tertekan dengan penurunan 15,42 % YoY."
       },
       {
-        "judul": "Masih ada 149.000 rumah yang harus disalurkan",
-        "isi": "Masih diperlukan sekitar 149.000 unit rumah subsidi yang harus didistribusikan dalam dua bulan terakhir tahun ini."
+        "judul": "Penurunan Penjualan per Tipe Rumah",
+        "isi": "Rumah tipe kecil turun 4,95 % YoY, tipe menengah turun 15,42 % YoY, dan tipe besar turun 10,78 % YoY pada Q3 2026."
       },
       {
-        "judul": "Langkah percepatan penyaluran",
-        "isi": "BP Tapera melakukan pemetaan hunian, menjaring minat masyarakat, serta dialog dengan pengembang dan pemerintah daerah untuk mengatasi kendala."
+        "judul": "Harga Properti Masih Naik, Tapi Lambat",
+        "isi": "IHPR berada di level 111,02 dengan pertumbuhan 0,58 % YoY, lebih rendah dari 0,69 % di Q2. Harga tipe menengah naik 0,63 %, tipe besar 0,57 %, tipe kecil 0,55 %."
       },
       {
-        "judul": "Akad massal: dari Bogor hingga Jawa Timur",
-        "isi": "Telah ada tiga akad massal (Bogor 2025, Serang 2025, Batang 2026). BP Tapera rencanakan acara massal berikutnya di Jawa Timur, mengundang Presiden Prabowo."
+        "judul": "Kendala Utama Pengembang",
+        "isi": "Biaya material menjadi hambatan terbesar (26,24 %), diikuti perizinan (17,17 %) dan suku bunga KPR (15,71 %). Suku bunga KPR stabil 7,47 % dan dipakai 70,68 % pembeli."
       },
       {
-        "judul": "Kesimpulan: Masih ada waktu hingga akhir 2026",
-        "isi": "Dengan sisa waktu hingga akhir tahun, BP Tapera bertekad mengoptimalkan penyaluran rumah subsidi melalui sosialisasi dan acara massal."
+        "judul": "Takeaway: Harga Naik, Transaksi Turun",
+        "isi": "Meskipun harga terus naik, transaksi melemah karena biaya material, perizinan, dan suku bunga. KPR tetap pilihan utama, pasar butuh solusi biaya dan regulasi."
       }
     ],
-    "caption": "🏠 BP Tapera sudah capai lebih dari setengah target rumah subsidi tahun ini! Masih ada ribuan unit yang perlu disalurkan, dan mereka tengah gencar sosialisasi serta persiapan akad massal. Apa pendapatmu tentang upaya percepatan ini? 💬",
+    "kuis": {
+      "pertanyaan": "Apa yang paling perlu diatasi untuk menghidupkan kembali penjualan rumah?",
+      "pilihan": [
+        "Biaya material",
+        "Perizinan & birokrasi",
+        "Suku bunga KPR"
+      ]
+    },
+    "caption": "Penjualan rumah primer turun 8,43 % meski harga masih naik, dan KPR tetap dipakai 70,68 % pembeli. 📊 Apa yang paling perlu diatasi untuk menghidupkan kembali penjualan rumah? Jawab di kolom komentar!",
     "hashtags": [
       "#properti",
-      "#rumahsubsidi",
-      "#BPTapera",
-      "#FLPP",
       "#rumah",
-      "#Indonesia",
-      "#perumahan",
+      "#pasarproperti",
+      "#KPR",
+      "#harga",
+      "#penjualan",
       "#investasi",
-      "#rumahmilik",
-      "#kebijakan",
-      "#rumahbaru"
+      "#rumahprimer",
+      "#bankindonesia",
+      "#lensaHukum"
     ]
   }
 }

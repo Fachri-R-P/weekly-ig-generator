@@ -26,7 +26,9 @@ def generate():
         raise HTTPException(status_code=502, detail=f"Gagal generate: {e}")
 
     render.main()
-    hasil["slides_url"] = [f"/slides/{i}" for i in range(1, 7)]
+    konten = hasil["konten"]
+    total = len(konten["slides"]) + (1 if konten.get("kuis") else 0)   # 6 slide + 1 slide kuis
+    hasil["slides_url"] = [f"/slides/{i}" for i in range(1, total + 1)]
     return hasil
 
 @app.get("/result")

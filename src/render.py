@@ -8,10 +8,11 @@ OUT = ROOT / "output"
 
 W, H = 1080, 1350 #ukuran feeds
 PAD = 90 # padding
-BG = (15, 23, 42) # BIRU GELAP
-AKSEN = (250, 204, 21) # KUNING
-PUTIH = (248, 250, 252)
-ABU = (148, 163, 184)
+BG_ATAS = (66, 104, 184)   # biru royal (atas gradasi)
+BG_BAWAH = (30, 52, 112)   # biru lebih gelap (bawah gradasi)
+AKSEN = (255, 214, 102)    # kuning hangat, kontras dengan biru
+PUTIH = (255, 255, 255)
+REDUP = (208, 224, 250)    # biru muda untuk teks sekunder
 
 FONT_BOLD = [
     "C:/Windows/Fonts/segoeuib.ttf",
@@ -50,38 +51,78 @@ def gambar_teks(draw, teks, font, y, warna, jarak=1.3):
         y += int(font.size * jarak)
     return y
 
+def latar():
+    # latar gradasi: atas BG_ATAS -> bawah BG_BAWAH
+    mask = Image.linear_gradient("L").resize((W, H))
+    return Image.composite(Image.new("RGB", (W, H), BG_BAWAH),
+                           Image.new("RGB", (W, H), BG_ATAS), mask)
+
+def kepala(d, nomor, total):
+    d.text((PAD, 80), "RumahKita", font=load_font(FONT_BOLD, 30), fill=AKSEN)
+    d.text((W - PAD - 90, 80), f"{nomor}/{total}", font=load_font(FONT_REG, 30), fill=REDUP)
+    d.rectangle([PAD, 140, PAD + 120, 148], fill=AKSEN)
+
 def buat_slide(nomor, total, slide, media):
-    img = Image.new("RGB", (W, H), BG)
+    img = latar()
     d = ImageDraw.Draw(img)
 
-    # logo di pojok
-    logo = Image.open(ROOT / "assets" / "rumah123_logo.jpg").convert("RGBA")
-    logo = logo.resize((120, 120))
-    img.paste(logo, (W - PAD - 120, 60), logo)
-
-    #header
-    d.text((PAD, 80), "RumahKita", font=load_font(FONT_BOLD, 30), fill=AKSEN)
-    d.text((W - PAD - 90, 80), f"{nomor}/{total}", font=load_font(FONT_REG, 30), fill=ABU)
-    d.rectangle([PAD, 140, PAD + 120, 148], fill=AKSEN)
+    kepala(d, nomor, total)
 
     # isi
     hook = nomor == 1
     f_judul = load_font(FONT_BOLD, 84 if hook else 64)
     f_isi = load_font(FONT_REG, 42)
     y = gambar_teks(d, slide["judul"], f_judul, 260, PUTIH, jarak=1.2)
-    gambar_teks(d, slide["isi"], f_isi, y + 50, ABU if hook else PUTIH)
+    gambar_teks(d, slide["isi"], f_isi, y + 50, REDUP if hook else PUTIH)
 
     # footer
-    d.text((PAD, H - 110), f"Sumber: {media}", font=load_font(FONT_REG, 30), fill=ABU)
+    d.text((PAD, H - 110), f"Sumber: {media}", font=load_font(FONT_REG, 30), fill=REDUP)
+    return img
+
+def slide_kuis(nomor, total, kuis):
+    """Slide penutup: polling opini dengan pilihan A/B/C."""
+    img = latar()
+    d = ImageDraw.Draw(img)
+    kepala(d, nomor, total)
+
+    y = gambar_teks(d, "Menurutmu?", load_font(FONT_BOLD, 84), 260, AKSEN, jarak=1.2)
+    y = gambar_teks(d, kuis["pertanyaan"], load_font(FONT_BOLD, 48), y + 20, PUTIH, jarak=1.25)
+    y += 50
+
+    f_pilihan = load_font(FONT_REG, 40)
+    f_huruf = load_font(FONT_BOLD, 40)
+    teks_x = PAD + 130                      # ruang untuk lingkaran huruf
+    lebar_teks = W - PAD - teks_x - 30
+    for huruf, pilihan in zip("ABC", kuis["pilihan"]):
+        baris = wrap(d, pilihan, f_pilihan, lebar_teks)
+        tinggi = max(110, len(baris) * 54 + 50)
+        d.rounded_rectangle([PAD, y, W - PAD, y + tinggi], radius=30,
+                            fill=(52, 86, 160), outline=AKSEN, width=3)
+        cy = y + tinggi // 2
+        d.ellipse([PAD + 28, cy - 36, PAD + 100, cy + 36], fill=AKSEN)
+        d.text((PAD + 64, cy), huruf, font=f_huruf, fill=BG_BAWAH, anchor="mm")
+        ty = cy - (len(baris) * 54) // 2 + 4
+        for b in baris:
+            d.text((teks_x, ty), b, font=f_pilihan, fill=PUTIH)
+            ty += 54
+        y += tinggi + 26
+
+    d.text((PAD, H - 110), "Jawab di kolom komentar ya!", font=load_font(FONT_REG, 30), fill=REDUP)
     return img
 
 def main():
     data = json.loads((OUT / "hasil.json").read_text(encoding="utf-8"))
     media = data["sumber_artikel"]["media"]
     slides = data["konten"]["slides"]
+    kuis = data["konten"].get("kuis")        # hasil lama mungkin belum punya kuis
+    total = len(slides) + (1 if kuis else 0)
     for i, s in enumerate(slides, start=1):
         path = OUT / f"slide_{i}.png"
-        buat_slide(i, len(slides), s, media).save(path)
+        buat_slide(i, total, s, media).save(path)
+        print("Tersimpan:", path)
+    if kuis:
+        path = OUT / f"slide_{total}.png"
+        slide_kuis(total, total, kuis).save(path)
         print("Tersimpan:", path)
 
 if __name__ == "__main__":
