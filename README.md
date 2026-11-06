@@ -31,8 +31,8 @@ Prompt lengkap ada di [`prompts/carousel_prompt.md`](prompts/carousel_prompt.md)
 
 - **Peran:** content writer akun Instagram berita properti Indonesia.
 - **Aturan akurasi:** hanya memakai fakta dari teks artikel; dilarang menambah angka, nama, tanggal, atau klaim; angka dan nama dipertahankan persis.
-- **Struktur 6 slide:** (1) hook, (2-5) satu poin utama per slide, (6) kesimpulan.
-- **Gaya:** santai tapi profesional, judul slide maks. 70 karakter, isi maks. 500 karakter.
+- **Struktur 6 slide:** (1) hook, (2-5) satu poin utama per slide, (6) kesimpulan. Slide 1 hanya berupa *teaser* pendek (fakta pemancing + pertanyaan, maks. 200 karakter; ajakan "Geser untuk tahu →" ditambahkan otomatis oleh `render.py`) tanpa membuka kesimpulan, sehingga pembaca perlu menggeser untuk mengetahui isinya.
+- **Gaya:** santai tapi profesional, judul slide maks. 70 karakter, isi slide 2-6 maks. 500 karakter.
 - **Kuis:** satu polling opini (bukan pertanyaan fakta) dengan 2-3 pilihan; pertanyaan maks. 120 karakter, tiap pilihan maks. 45 karakter. Caption diakhiri pertanyaan polling dan ajakan menjawab di komentar.
 - **Format output:** JSON dengan `ringkasan`, `slides` (6 item), `kuis`, `caption`, dan `hashtags` (8-12).
 

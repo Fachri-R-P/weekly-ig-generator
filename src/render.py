@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -71,13 +72,19 @@ def buat_slide(nomor, total, slide, media):
     # isi
     hook = nomor == 1
     f_judul = load_font(FONT_BOLD, 84 if hook else 64)
-    f_isi = load_font(FONT_REG, 42)
+    f_isi = load_font(FONT_REG, 50 if hook else 42)   # teaser slide 1 pendek, jadi lebih besar
     y = gambar_teks(d, slide["judul"], f_judul, 260, PUTIH, jarak=1.2)
-    gambar_teks(d, slide["isi"], f_isi, y + 50, REDUP if hook else PUTIH)
+    isi = slide["isi"]
+    if hook:
+        # ajakan geser digambar terpisah (tebal + panah); buang kalau AI menulisnya sendiri
+        isi = re.sub(r"\s*Geser untuk tahu\.?\s*$", "", isi, flags=re.IGNORECASE)
+    y = gambar_teks(d, isi, f_isi, y + 50, REDUP if hook else PUTIH)
+    if hook:
+        gambar_teks(d, "Geser untuk tahu →", load_font(FONT_BOLD, 50), y + 30, AKSEN)
 
     # footer
     d.text((PAD, H - 110), f"Sumber: {media}", font=load_font(FONT_REG, 30), fill=REDUP)
-    if nomor < total:   # petunjuk geser, tidak ditampilkan di slide terakhir
+    if 1 < nomor < total:   # petunjuk geser kecil; slide 1 sudah punya ajakan besar, slide terakhir tidak perlu
         d.text((W - PAD, H - 110), "Geser →", font=load_font(FONT_BOLD, 30), fill=AKSEN, anchor="ra")
     return img
 
@@ -87,7 +94,9 @@ def slide_kuis(nomor, total, kuis):
     d = ImageDraw.Draw(img)
     kepala(d, nomor, total)
 
-    y = gambar_teks(d, "Menurutmu?", load_font(FONT_BOLD, 84), 260, AKSEN, jarak=1.2)
+    # hindari pengulangan: kalau pertanyaan sudah diawali "Menurut...", pakai judul lain
+    judul = "Yuk, pilih!" if kuis["pertanyaan"].lower().startswith("menurut") else "Menurutmu?"
+    y = gambar_teks(d, judul, load_font(FONT_BOLD, 84), 260, AKSEN, jarak=1.2)
     y = gambar_teks(d, kuis["pertanyaan"], load_font(FONT_BOLD, 48), y + 20, PUTIH, jarak=1.25)
     y += 50
 

@@ -7,3 +7,5 @@ groq
 pydantic>=2
 python-dotenv
 pillow
+fastapi
+uvicorn

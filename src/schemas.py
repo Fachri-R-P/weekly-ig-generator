@@ -32,6 +32,14 @@ class Carousel(BaseModel):
     caption: str = Field(min_length=20, max_length=800)
     hashtags: list[str] = Field(min_length=5, max_length=15)
 
+    @field_validator("slides")
+    @classmethod
+    def cek_hook(cls, v):
+        # slide 1 hanya teaser: pendek, supaya pembaca perlu menggeser untuk tahu isinya
+        if len(v[0].isi) > 200:
+            raise ValueError("isi slide 1 (hook) maksimal 200 karakter: tulis teaser pendek, jangan buka kesimpulan")
+        return v
+
     @field_validator("hashtags")
     @classmethod
     # membuat fungsi cleaning hastag "# properti" -> "#properti"
