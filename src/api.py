@@ -28,3 +28,17 @@ def generate():
     render.main()
     hasil["slides_url"] = [f"/slides/{i}" for i in range(1, 7)]
     return hasil
+
+@app.get("/result")
+def result():
+    f = OUT / "hasil.json"
+    if not f.exists():
+        raise HTTPException(status_code=404, detail="Belum ada hasil, /generate dulu")
+    return json.loads(f.read_text(encoding="utf-8"))
+
+@app.get("/slides/{nomor}")
+def slide(nomor: int):
+    f = OUT / f"slide_{nomor}.png"
+    if not f.exists():
+        raise HTTPException(status_code=404, detail="Slide tidak ditemukan")
+    return FileResponse(f, media_type="image/png")

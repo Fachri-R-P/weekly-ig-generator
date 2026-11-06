@@ -1,0 +1,121 @@
+{
+  "name": "Weekly IG Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "id": "2ffa376f-26fd-4b8a-ac5f-f502a84905e2",
+      "name": "Setiap Senin 08:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        -144
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "f736f780-0b4d-411e-8a96-a24e49422d99",
+      "name": "Jalankan Manual (Test)",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        416,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/generate",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "c2c1e8fd-d273-4f2f-96c7-657ac8ca5daa",
+      "name": "Generate Carousel (FastAPI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\nreturn [{\n  json: {\n    judul_artikel: d.sumber_artikel.judul,\n    media: d.sumber_artikel.media,\n    url_sumber: d.sumber_artikel.url,\n    ringkasan: d.konten.ringkasan,\n    slides: d.konten.slides,\n    caption_lengkap: d.konten.caption + \"\\n\\n\" + d.konten.hashtags.join(\" \"),\n    slides_url: d.slides_url.map(u => \"http://127.0.0.1:8000\" + u)\n  }\n}];"
+      },
+      "id": "715b5663-a5fe-412e-97c6-a27040da36a8",
+      "name": "Cleaning Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1024,
+        -48
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Setiap Senin 08:00": {
+      "main": [
+        [
+          {
+            "node": "Generate Carousel (FastAPI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Jalankan Manual (Test)": {
+      "main": [
+        [
+          {
+            "node": "Generate Carousel (FastAPI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Carousel (FastAPI)": {
+      "main": [
+        [
+          {
+            "node": "Cleaning Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Jakarta",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "9f641428-3004-4030-8f36-283f085625fb",
+  "meta": {
+    "instanceId": "7718b88a4db3c896ae35f84ad6336d0debb71f36414cae54876ad99800b282cb"
+  },
+  "nodeGroups": [],
+  "id": "jfs569tFIo5xt0L5",
+  "tags": []
+}
