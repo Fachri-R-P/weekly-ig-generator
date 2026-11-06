@@ -77,6 +77,8 @@ def buat_slide(nomor, total, slide, media):
 
     # footer
     d.text((PAD, H - 110), f"Sumber: {media}", font=load_font(FONT_REG, 30), fill=REDUP)
+    if nomor < total:   # petunjuk geser, tidak ditampilkan di slide terakhir
+        d.text((W - PAD, H - 110), "Geser →", font=load_font(FONT_BOLD, 30), fill=AKSEN, anchor="ra")
     return img
 
 def slide_kuis(nomor, total, kuis):

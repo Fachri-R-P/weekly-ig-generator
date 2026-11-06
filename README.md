@@ -32,7 +32,7 @@ Prompt lengkap ada di [`prompts/carousel_prompt.md`](prompts/carousel_prompt.md)
 - **Peran:** content writer akun Instagram berita properti Indonesia.
 - **Aturan akurasi:** hanya memakai fakta dari teks artikel; dilarang menambah angka, nama, tanggal, atau klaim; angka dan nama dipertahankan persis.
 - **Struktur 6 slide:** (1) hook, (2-5) satu poin utama per slide, (6) kesimpulan.
-- **Gaya:** santai tapi profesional, judul slide maks. 70 karakter, isi maks. 260 karakter.
+- **Gaya:** santai tapi profesional, judul slide maks. 70 karakter, isi maks. 500 karakter.
 - **Kuis:** satu polling opini (bukan pertanyaan fakta) dengan 2-3 pilihan; pertanyaan maks. 120 karakter, tiap pilihan maks. 45 karakter. Caption diakhiri pertanyaan polling dan ajakan menjawab di komentar.
 - **Format output:** JSON dengan `ringkasan`, `slides` (6 item), `kuis`, `caption`, dan `hashtags` (8-12).
 
@@ -101,11 +101,11 @@ Workflow: `Trigger mingguan → POST /generate → rapikan output` (judul, sumbe
 
 ## Contoh hasil
 
-Contoh keluaran lengkap ada di folder [`examples/`](examples/) (`hasil.json` + 6 PNG). `hasil.json` juga memuat **referensi sumber berita asli** (`sumber_artikel`: judul, media, tanggal, URL).
+Contoh keluaran lengkap ada di folder [`examples/`](examples/) (`hasil.json` + 7 PNG: 6 slide isi + 1 slide kuis). `hasil.json` juga memuat **referensi sumber berita asli** (`sumber_artikel`: judul, media, tanggal, URL).
 
-| Slide 1 (hook) | Slide 3 |
-|---|---|
-| ![Slide 1](examples/slide_1.png) | ![Slide 3](examples/slide_3.png) |
+| Slide 1 (hook) | Slide 3 | Slide 7 (kuis) |
+|---|---|---|
+| ![Slide 1](examples/slide_1.png) | ![Slide 3](examples/slide_3.png) | ![Slide 7](examples/slide_7.png) |
 
 ## Struktur folder
 
